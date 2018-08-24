@@ -1,0 +1,14 @@
+{
+    "name": "ncicloud-mariadb",
+    "version": "1.0.0",
+    "author": "NCI Cloud Team",
+    "summary": "Installs, configures and manages Mariadb servers",
+    "license": "Apache-2.0",
+    "source": "https://github.com/NCI-Cloud/puppet-mariadb",
+    "dependencies": [
+        { "name": "puppetlabs/xinetd", "version_requirement": ">= 2.0.0" }
+    ],
+    "tags": [
+        "xinetd"
+    ]
+}
