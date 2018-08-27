@@ -110,6 +110,7 @@ class mariadb::cluster (
     class { 'mariadb::cluster::status':
       status_user     => $status_user,
       status_password => $status_password,
+      require         => Class['mariadb::server'],
     }
   }
 
