@@ -39,6 +39,14 @@
 #     `cluster_servers`.
 #   [*manage_status*]
 #     If true, manage the status user and status script.
+#   [*manage_repo*]
+#     If true, manage the yum or apt repo.
+#   [*build_stage*]
+#     Where in the cluster build process the node is. Accepted values are
+#     'bootstrap', which must be used on a single node in order to bootstrap the
+#     cluster on that node, 'peer', which should be used on the remaining nodes
+#     in order to join them to the bootstrap node, and 'standalone', which
+#     configures the node without any clustering support.
 #
 # Actions:
 #
@@ -63,61 +71,69 @@ class mariadb::cluster (
   $enabled                 = true,
   $single_cluster_peer     = true,
   $manage_status           = true,
+  $manage_repo             = true,
+  $build_stage             = 'standalone',
 ) inherits mariadb::params {
 
-  include ::mariadb
 
-  package { $::mariadb::galera_name:
-    ensure => $galera_ensure,
-  }
-
-  class { 'mariadb::server':
+  class { 'mariadb::cluster::base':
+    wsrep_sst_password      => $wsrep_sst_password,
+    wsrep_sst_user          => $wsrep_sst_user,
+    package_names           => $package_names,
     package_ensure          => $package_ensure,
     package_names           => $::mariadb::cluster_package_names,
     debiansysmaint_password => $debiansysmaint_password,
+    manage_repo             => $manage_repo,
+    repo_version            => $repo_version,
+    manage_status           => $manage_status,
+    status_user             => $status_user,
+    status_password         => $status_password,
     config_hash             => $config_hash,
     enabled                 => $enabled,
   }
 
-  class { 'mariadb::cluster::auth':
-    wsrep_sst_user     => $wsrep_sst_user,
-    wsrep_sst_password => $wsrep_sst_password,
+  $galera_options = {
+    wsrep_sst_password  => $wsrep_sst_password,
+    wsrep_sst_user      => $wsrep_sst_user,
+    wsrep_sst_method    => $wsrep_sst_method,
+    wsrep_cluster_name  => $wsrep_cluster_name,
+    wsrep_slave_threads => $wsrep_slave_threads,
+    galera_name         => $galera_name,
+    galera_ensure       => $galera_ensure,
+    cluster_iface       => $cluster_iface,
+    repo_version        => $repo_version,
   }
 
-  if $manage_status == true {
-    if $status_password == undef {
-      fail('Must specify status_password to manage cluster status')
+  case $build_stage {
+    'bootstrap': {
+      class { 'mariadb::cluster::galera':
+        cluster_peer => '',
+        *            => $galera_options,
+      }
     }
 
-    class { 'mariadb::cluster::status':
-      status_user     => $status_user,
-      status_password => $status_password,
-      require         => Class['mariadb::server'],
+    'peer': {
+      # Find the next server in the list as a peer to sync with
+      if $single_cluster_peer == true {
+        $cluster_peer = inline_template(@(TMPL/L))
+          <% (0..@cluster_servers.length).each do |i|; if @cluster_servers[i] \
+          == @ipaddress_cluster_iface; if (i+1) == @cluster_servers.length %><%= \
+          @cluster_servers[0] %><% else %><%= @cluster_servers[i+1] %><% \
+          end; end; end %>
+          |-TMPL
+      } else {
+        $cluster_peer = join($cluster_servers,',')
+      }
+
+      class { 'mariadb::cluster::galera':
+        cluster_peer => $cluster_peer,
+        *            => $galera_options,
+      }
     }
-  }
 
-  if versioncmp($::facterversion, "3.0.0") > 1 {
-    $ipaddress_cluster_iface = $::facts['networking']['interfaces'][$cluster_iface]['ip']
-  } else {
-    $ipaddress_cluster_iface = lookup("ipaddress_${cluster_iface}")
-}
-
-  # Find the next server in the list as a peer to sync with
-  if $single_cluster_peer == true {
-    $cluster_peer = inline_template("<% (0..@cluster_servers.length).each do |i|; if @cluster_servers[i] == @ipaddress_cluster_iface; if (i+1) == @cluster_servers.length %><%= @cluster_servers[0] %><% else %><%= @cluster_servers[i+1] %><% end; end; end %>")
-  } else {
-    $cluster_peer = join($cluster_servers,',')
-  }
-
-  $wsrep_sst_auth = "${wsrep_sst_user}:${wsrep_sst_password}"
-
-  file { "${mariadb::params::config_dir}/galera_replication.cnf":
-    content => template('mariadb/galera_replication.cnf.erb'),
-    require => Class['mariadb::server'],
-  }
-
-  if $wsrep_sst_method == 'xtrabackup' or $wsrep_sst_method == 'xtrabackup-v2' {
-    ensure_packages(['percona-xtrabackup'])
+    'standalone', default: {
+      notice('Standalone mariadb server')
+    }
   }
 
   if $wsrep_sst_method == 'mariabackup' {

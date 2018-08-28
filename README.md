@@ -42,8 +42,31 @@ Installs the mariadb and supporting galera packages for a cluster.
           'root_password' => 'foo',
           'bind_address'  => '0.0.0.0',
           'restart'       => false,     # manually manage service with galera
-        }
+        },
+        build_stage     => 'peer'
     }
+
+Bootstrapping a cluster can be done using the `build_stage` parameter. The
+`build_stage` parameter can take three values: `bootstrap`, which configures
+the node with a bootstrap config, with the galera cluster address set to
+`gcomm://`; `peer`, which configures the cluster address to point to other
+nodes in the cluster (as specified by the `cluster_servers` paramter); and
+`standalone`, which configures the node without any clustering support.
+
+The process for bootstrapping a cluster is as follows:
+
+1) select a bootstrap node, set the `build_stage` value to `bootstrap` for this
+node, and run puppet to bring up the bootstrap mariadb instance
+
+2) on the other nodes, set the `build_stage` value to `peer` and run puppet
+(puppet may need to be run a few times as the process of joining the cluster
+can take a little bit of time)
+
+3) on the bootstrap node, set the `build_stage` value to `peer` and run puppet
+to finalise the cluster configuration
+
+Note that the `build_stage` parameter defaults to `'standalone'` - it must be
+set to a non-default value to enable clustering support.
 
 ### mariadb::db
 Creates a database with a user and assign some privileges.
