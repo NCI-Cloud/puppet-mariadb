@@ -80,7 +80,7 @@ class mariadb::server (
   }
 
   file { '/var/log/mysql/error.log':
-    owner => mysql,
+    owner   => mysql,
     require => Package[$package_names],
   }
 
