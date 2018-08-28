@@ -55,13 +55,19 @@ class mariadb::params {
       $basedir                = '/usr'
       $datadir                = '/var/lib/mysql'
       $tmpdir                 = '/tmp'
-      $service_name           = 'mysql'
+      if $::lsbdistid == 'Ubuntu' and versioncmp($::operatingsystemrelease, '16.04') >= 0 {
+        $service_name         = 'mariadb'
+        $cluster_package_names  = ['mariadb-server']
+        $galera_package_name    = 'galera-3'
+      } else {
+        $service_name           = 'mysql'
+        $cluster_package_names  = ['mariadb-galera-server']
+        $galera_package_name    = 'galera'
+      }
       $client_package_names   = ['libmysqlclient18', 'mysql-common', 'mariadb-client']
       $client_package_ensure  = 'installed'
       $server_package_names   = ['mariadb-server']
-      $cluster_package_names  = ['mariadb-galera-server']
       $cluster_package_ensure = 'installed'
-      $galera_package_name    = 'galera'
       $socket                 = '/var/run/mysqld/mysqld.sock'
       $pidfile                = '/var/run/mysqld/mysqld.pid'
       $config_file            = '/etc/mysql/my.cnf'
