@@ -26,7 +26,13 @@ class mariadb::cluster::galera (
   $wsrep_sst_auth = "${wsrep_sst_user}:${wsrep_sst_password}"
 
   if versioncmp($::facterversion, '2.4.6') > 0 {
-    $ipaddress_cluster_iface = $::facts['networking']['interfaces'][$cluster_iface]['ip']
+    # if the cluster interface doesn't exist there isn't much we can do here,
+    # except bail and hope that a subsequent puppet run will fix things
+    if $::facts['networking']['interfaces'][$cluster_iface] {
+      $ipaddress_cluster_iface = $::facts['networking']['interfaces'][$cluster_iface]['ip']
+    } else {
+      $ipaddress_cluster_iface = ''
+    }
   } else {
     $ipaddress_cluster_iface = lookup("ipaddress_${cluster_iface}")
   }
