@@ -6,7 +6,7 @@
     "license": "Apache-2.0",
     "source": "https://github.com/NCI-Cloud/puppet-mariadb",
     "dependencies": [
-        { "name": "puppetlabs/xinetd", "version_requirement": ">= 2.0.0" }
+        { "name": "puppetlabs/xinetd", "version_requirement": ">= 1.5.0" }
     ],
     "tags": [
         "xinetd"
