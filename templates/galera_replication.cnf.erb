@@ -7,6 +7,9 @@
 wsrep_on=ON
 <%- end -%>
 wsrep_provider = <%= @wsrep_provider %>
+<%- if @wsrep_provider_options -%>
+wsrep_provider_options = "<%= @wsrep_provider_options %>"
+<%- end -%>
 wsrep_node_name = <%= @hostname %>
 wsrep_cluster_address = 'gcomm://<%= @cluster_peer %>'
 wsrep_cluster_name = <%= @wsrep_cluster_name %>

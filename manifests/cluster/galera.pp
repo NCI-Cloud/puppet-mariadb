@@ -15,6 +15,7 @@ class mariadb::cluster::galera (
   $galera_ensure,
   $cluster_iface,
   $repo_version,
+  $wsrep_provider_options=undef,
 ) inherits mariadb::params {
 
   $service_name = $mariadb::params::service_name
