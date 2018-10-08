@@ -21,6 +21,14 @@
 #   [*root_group]         - use specified group for root-owned files
 #   [*restart]            - whether to restart mariadbd (true/false)
 #
+# Tuning parameters (see mysql/mariadb documentation)
+#   [*max_connections]
+#   [*tmp_table_size]
+#   [*max_heap_table_size]
+#   [*query_cache_limit]
+#   [*query_cache_size]
+#   [*skip_name_resolve]
+#
 # Actions:
 #
 # Requires:
@@ -55,6 +63,12 @@ class mariadb::config(
   $default_engine    = 'UNSET',
   $root_group        = $mariadb::params::root_group,
   $restart           = $mariadb::params::restart,
+  $max_connections   = $mariadb::params::max_connections,
+  $tmp_table_size    = $mariadb::params::tmp_table_size,
+  $max_heap_table_size = $mariadb::params::max_heap_table_size,
+  $query_cache_limit = $mariadb::params::query_cache_limit,
+  $query_cache_size  = $mariadb::params::query_cache_size,
+  $skip_name_resolve = $mariadb::params::skip_name_resolve,
   $purge_conf_dir    = false
 ) inherits mariadb::params {
 

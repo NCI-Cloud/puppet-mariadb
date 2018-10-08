@@ -23,19 +23,22 @@ skip-external-locking
 bind-address    = <%= @bind_address %>
 <% end %>
 
+<%- if @skip_name_resolve -%>
+skip-name-resolve = <%= @skip_name_resolve %>
+<%- end -%>
 
 #
 # * Fine Tuning
 #
-max_connections		= 100
+max_connections		= <%= @max_connections %>
 connect_timeout		= 5
 wait_timeout		= 600
 max_allowed_packet	= 16M
 thread_cache_size       = 128
 sort_buffer_size	= 4M
 bulk_insert_buffer_size	= 16M
-tmp_table_size		= 32M
-max_heap_table_size	= 32M
+tmp_table_size		= <%= @tmp_table_size %>
+max_heap_table_size	= <%= @max_heap_table_size %>
 #
 # * MyISAM
 #
@@ -53,8 +56,8 @@ read_rnd_buffer_size	 = 1M
 # * Query Cache Configuration
 #
 # Cache only tiny result sets, so we can fit more in the query cache.
-query_cache_limit 	 = 128k
-query_cache_size	   = 64M
+query_cache_limit 	 = <%= @query_cache_limit %>
+query_cache_size	 = <%= @query_cache_size %>
 # for more write intensive setups, set to DEMAND or OFF
 #query_cache_type	   	   = DEMAND
 #
