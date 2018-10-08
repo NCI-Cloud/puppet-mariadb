@@ -20,6 +20,14 @@ class mariadb::params {
   $slave_threads       = $::processorcount * 2
   $version             = '5.5'
 
+  # default config options
+  $max_connections     = 100
+  $tmp_table_size      = '32M'
+  $max_heap_table_size = '32M'
+  $query_cache_limit   = '128k'
+  $query_cache_size    = '64M'
+  $skip_name_resolve   = undef
+
   case $::osfamily {
     'RedHat': {
       $basedir                = '/usr'
