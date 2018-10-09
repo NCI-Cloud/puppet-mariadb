@@ -66,7 +66,7 @@ class mariadb::params {
       $tmpdir                 = '/tmp'
       if $::lsbdistid == 'Ubuntu' and versioncmp($::operatingsystemrelease, '16.04') >= 0 {
         $service_name         = 'mysql'
-        $cluster_package_names  = ['mariadb-server']
+        $cluster_package_names  = ['mariadb-galera-server']
         $galera_package_name    = 'galera-3'
       } elsif $::lsbdistid == 'Ubuntu' and versioncmp($::operatingsystemrelease, '18.04') >= 0 {
         $service_name         = 'mariadb'
