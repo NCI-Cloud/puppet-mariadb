@@ -28,6 +28,9 @@ class mariadb::params {
   $query_cache_size    = '64M'
   $skip_name_resolve   = undef
 
+  # let puppet guess the service provider, but allow a user override
+  $service_provider    = undef
+
   case $::osfamily {
     'RedHat': {
       $basedir                = '/usr'
