@@ -71,7 +71,6 @@ class mariadb::cluster (
   $enabled                 = true,
   $single_cluster_peer     = true,
   $manage_status           = true,
-  $manage_repo             = true,
   $build_stage             = 'standalone',
 ) inherits mariadb::params {
 
@@ -82,8 +81,6 @@ class mariadb::cluster (
     package_ensure          => $package_ensure,
     package_names           => $::mariadb::cluster_package_names,
     debiansysmaint_password => $debiansysmaint_password,
-    manage_repo             => $manage_repo,
-    repo_version            => $repo_version,
     manage_status           => $manage_status,
     status_user             => $status_user,
     status_password         => $status_password,
@@ -100,7 +97,6 @@ class mariadb::cluster (
     galera_name         => $::mariadb::galera_name,
     galera_ensure       => $galera_ensure,
     cluster_iface       => $cluster_iface,
-    repo_version        => $repo_version,
   }
 
   case $build_stage {

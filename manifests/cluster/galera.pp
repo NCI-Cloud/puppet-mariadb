@@ -14,7 +14,6 @@ class mariadb::cluster::galera (
   $galera_name,
   $galera_ensure,
   $cluster_iface,
-  $repo_version,
   $wsrep_provider_options=undef,
 ) inherits mariadb::params {
 

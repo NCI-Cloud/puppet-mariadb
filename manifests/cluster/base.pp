@@ -13,8 +13,6 @@ class mariadb::cluster::base (
   $package_names,
   $package_ensure,
   $debiansysmaint_password,
-  $manage_repo,
-  $repo_version,
   $manage_status,
   $status_user,
   $status_password,
@@ -26,8 +24,6 @@ class mariadb::cluster::base (
     package_names           => $package_names,
     package_ensure          => $package_ensure,
     debiansysmaint_password => $debiansysmaint_password,
-    repo_version            => $repo_version,
-    manage_repo             => $manage_repo,
     config_hash             => $config_hash,
     enabled                 => $enabled,
   }
