@@ -21,6 +21,7 @@ class mariadb::python(
   package { 'python-mysqldb':
     ensure => $package_ensure,
     name   => $package_name,
+    tag    => 'mariadb',
   }
 
 }

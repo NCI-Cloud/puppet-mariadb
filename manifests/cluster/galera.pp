@@ -22,6 +22,7 @@ class mariadb::cluster::galera (
 
   package { $galera_name:
     ensure => $galera_ensure,
+    tag    => 'mariadb',
   }
 
   $wsrep_sst_auth = "${wsrep_sst_user}:${wsrep_sst_password}"

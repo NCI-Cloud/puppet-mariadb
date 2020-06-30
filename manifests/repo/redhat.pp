@@ -11,4 +11,5 @@ class mariadb::repo::redhat {
     descr    => 'MariaDB Yum Repository',
   }
 
+  Yumrepo <| title == 'mariadb' |> -> Package <| tag == 'mariadb' |>
 }

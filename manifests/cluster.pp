@@ -79,7 +79,6 @@ class mariadb::cluster (
   class { 'mariadb::cluster::base':
     wsrep_sst_password      => $wsrep_sst_password,
     wsrep_sst_user          => $wsrep_sst_user,
-    package_names           => $package_names,
     package_ensure          => $package_ensure,
     package_names           => $::mariadb::cluster_package_names,
     debiansysmaint_password => $debiansysmaint_password,
@@ -98,7 +97,7 @@ class mariadb::cluster (
     wsrep_sst_method    => $wsrep_sst_method,
     wsrep_cluster_name  => $wsrep_cluster_name,
     wsrep_slave_threads => $wsrep_slave_threads,
-    galera_name         => $galera_name,
+    galera_name         => $::mariadb::galera_name,
     galera_ensure       => $galera_ensure,
     cluster_iface       => $cluster_iface,
     repo_version        => $repo_version,

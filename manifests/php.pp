@@ -15,6 +15,7 @@ class mariadb::php(
   package { 'php-mysql':
     ensure => $package_ensure,
     name   => $package_name,
+    tag    => 'mariadb',
   }
 
 }

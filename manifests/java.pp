@@ -19,6 +19,7 @@ class mariadb::java (
   package { 'mysql-connector-java':
     ensure => $package_ensure,
     name   => $package_name,
+    tag    => 'mariadb',
   }
 
 }

@@ -55,6 +55,7 @@ class mariadb::server (
 
   package { $real_package_names:
     ensure  => $package_ensure,
+    tag     => 'mariadb',
   }
 
   file { '/var/log/mysql/error.log':
