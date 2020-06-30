@@ -7,7 +7,7 @@ class mariadb::repo::redhat {
     baseurl  => "${::mariadb::mirror}/${::mariadb::version}/rhel\$releasever-amd64/",
     enabled  => '1',
     gpgcheck => '1',
-    gpgkey   => "${mirror}/RPM-GPG-KEY-MariaDB",
+    gpgkey   => "${::mariadb::mirror}/RPM-GPG-KEY-MariaDB",
     descr    => 'MariaDB Yum Repository',
   }
 
