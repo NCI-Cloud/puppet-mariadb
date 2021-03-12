@@ -1,6 +1,6 @@
 {
     "name": "ncicloud-mariadb",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "author": "NCI Cloud Team",
     "summary": "Installs, configures and manages Mariadb servers",
     "description": "Installs, configures and manages Mariadb servers",
@@ -10,7 +10,7 @@
     "dependencies": [
         {
             "name": "puppetlabs/xinetd",
-            "version_requirement": ">=3.3.0"
+            "version_requirement": ">=1.5.0 <=3.3.0"
         },
         {
             "name": "puppetlabs/mysql",
