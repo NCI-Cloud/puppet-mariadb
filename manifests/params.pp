@@ -20,7 +20,6 @@ class mariadb::params {
   $slave_threads         = $::processorcount * 2
   $version               = '5.5'
   $server_package_ensure = 'installed'
-  $service_provider      = undef
 
   # default config options
   $max_connections     = 100
