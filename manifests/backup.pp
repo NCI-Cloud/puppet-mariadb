@@ -37,6 +37,9 @@ class mariadb::backup (
   $onefile = true,
   $ensure = 'present',
   $backupmethod = 'mysqldump',
+  $compresstype = 'bzip2',
+  $compressparallel = false,
+  $compressthreads = min($::processorcount/2, 2),
 ) {
 
   include ::mariadb
@@ -47,11 +50,52 @@ class mariadb::backup (
     require       => Class['mariadb::server'],
   }
 
-  database_grant { "${backupuser}@localhost":
-    privileges => [ 'Select_priv', 'Reload_priv', 'Lock_tables_priv',
-                    'Show_view_priv', 'Repl_client_priv',
-                    'Process_priv', 'Super_priv' ],
+  if (versioncmp($::mariadb::version, '10.5') >= 0) {
+    $grant = [ 'SELECT', 'RELOAD', 'LOCK TABLES', 'SHOW VIEW', 'BINLOG MONITOR', 'PROCESS', 'SUPER' ]
+  } else {
+    $grant = [ 'SELECT', 'RELOAD', 'LOCK TABLES', 'SHOW VIEW', 'REPLICATION CLIENT', 'PROCESS', 'SUPER' ]
+  }
+  mysql_grant { "${backupuser}@localhost/*.*":
+    user       => "${backupuser}@localhost",
+    table      => '*.*',
+    privileges => $grant,
     require    => Database_user["${backupuser}@localhost"],
+  }
+
+  if $backupcompress {
+    case $compresstype {
+      'gzip': {
+        $compress_extension = 'gz'
+        if $compressparallel {
+          ensure_packages(['pigz'])
+          $compress_command = "pigz -p ${compressthreads}"
+        } else {
+          $compress_command = 'gzip'
+        }
+      }
+      'xz': {
+        $compress_extension = 'xz'
+        if $compressparallel {
+          ensure_packages(['pixz'])
+          $compress_command = "pixz -p ${compressthreads}"
+        } else {
+          $compress_command = 'xz'
+        }
+      }
+      'bzip2': {
+        $compress_extension = 'bz2'
+        if $compressparallel {
+          ensure_packages(['pbzip2'])
+          $compress_command = "pbzip2 -z -c -p${compressthreads}"
+        } else {
+          $compress_command = 'bzcat -z -c'
+        }
+      }
+      default: {
+          fail('Unknown compression type. Must be one of gzip, xz or bzip2')
+      }
+    }
+
   }
 
   if $backupmethod == 'mariabackup' {

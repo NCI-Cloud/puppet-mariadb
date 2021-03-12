@@ -74,6 +74,13 @@ class mariadb::cluster (
   $build_stage             = 'standalone',
 ) inherits mariadb::params {
 
+  if $wsrep_sst_method == 'xtrabackup' or $wsrep_sst_method == 'xtrabackup-v2' {
+    ensure_packages(['percona-xtrabackup'])
+  }
+
+  if $wsrep_sst_method == 'mariabackup' {
+    ensure_packages([$::mariadb::backup_package_name])
+  }
 
   class { 'mariadb::cluster::base':
     wsrep_sst_password      => $wsrep_sst_password,
@@ -129,10 +136,6 @@ class mariadb::cluster (
     'standalone', default: {
       notice('Standalone mariadb server')
     }
-  }
-
-  if $wsrep_sst_method == 'mariabackup' {
-    ensure_packages([$::mariadb::backup_package_name])
   }
 
 }

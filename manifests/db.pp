@@ -34,18 +34,15 @@
 #  }
 #
 define mariadb::db (
-  $user,
-  $password,
-  $charset     = 'utf8',
-  $host        = 'localhost',
-  $grant       = 'all',
-  $sql         = undef,
-  $enforce_sql = false,
-  $ensure      = 'present'
+  String                    $user,
+  String                    $password,
+  String                    $charset     = 'utf8',
+  String                    $host        = 'localhost',
+  String                    $grant       = 'all',
+  Optional[String]          $sql         = undef,
+  Boolean                   $enforce_sql = false,
+  Enum['present', 'absent'] $ensure      = 'present'
 ) {
-
-  validate_re($ensure, '^(present|absent)$',
-  "${ensure} is not supported for ensure. Allowed values are 'present' and 'absent'.")
 
   database { $name:
     ensure   => $ensure,
@@ -60,7 +57,9 @@ define mariadb::db (
   }
 
   if $ensure == 'present' {
-    database_grant { "${user}@${host}/${name}":
+    mysql_grant { "${user}@${host}/${name}.*":
+      user       => "${user}@${host}",
+      table      => "${name}.*",
       privileges => $grant,
       require    => Database_user["${user}@${host}"],
     }

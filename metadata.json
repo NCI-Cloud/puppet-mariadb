@@ -1,14 +1,61 @@
 {
     "name": "ncicloud-mariadb",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "author": "NCI Cloud Team",
     "summary": "Installs, configures and manages Mariadb servers",
+    "description": "Installs, configures and manages Mariadb servers",
     "license": "Apache-2.0",
     "source": "https://github.com/NCI-Cloud/puppet-mariadb",
+    "issues_url": "https://github.com/NCI-Cloud/puppet-mariadb/issues",
     "dependencies": [
-        { "name": "puppetlabs/xinetd", "version_requirement": ">= 1.5.0" }
+        {
+            "name": "puppetlabs/xinetd",
+            "version_requirement": ">=3.3.0"
+        },
+        {
+            "name": "puppetlabs/mysql",
+            "version_requirement": ">=8.0.0"
+        },
+        {
+            "name": "puppetlabs/stdlib",
+            "version_requirement": ">=4.0.0"
+        },
+        {
+            "name": "puppetlabs/apt",
+            "version_requirement": ">=6.0.0 <7.0.0"
+        }
     ],
-    "tags": [
-        "xinetd"
-    ]
+    "operatingsystem_support": [
+        {
+            "operatingsystem": "Debian",
+            "operatingsystemrelease": [
+                "9"
+            ]
+        },
+        {
+            "operatingsystem": "Fedora",
+            "operatingsystemrelease": [
+                "24"
+            ]
+        },
+        {
+            "operatingsystem": "RedHat",
+            "operatingsystemrelease": [
+                "7"
+            ]
+        },
+        {
+            "operatingsystem": "Ubuntu",
+            "operatingsystemrelease": [
+                "18.04",
+                "20.04"
+            ]
+        }
+    ],
+    "requirements": [
+        {
+            "name": "puppet",
+            "version_requirement": "5.x"
+        }
+    ],
 }
