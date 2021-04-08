@@ -111,15 +111,16 @@ class mariadb::config(
       default: { $old_pw="-p'${old_root_password}'" }
     }
 
+    $notify_restart = $restart ? {
+      true => Exec['mariadb-restart'],
+      false => undef,
+    }
     exec { 'set_mariadb_rootpw':
       command   => "mysqladmin -u root ${old_pw} password '${root_password}'",
       logoutput => true,
       unless    => "mysqladmin -u root -p'${root_password}' status > /dev/null",
       path      => '/usr/local/sbin:/usr/bin:/usr/local/bin',
-      notify    => $restart ? {
-        true  => Exec['mariadb-restart'],
-        false => undef,
-      },
+      notify    => $notify_restart,
       require   => File[$mariadb::params::config_dir],
     }
 

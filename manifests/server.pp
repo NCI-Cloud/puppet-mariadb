@@ -54,8 +54,8 @@ class mariadb::server (
   create_resources( 'class', $config_class )
 
   package { $real_package_names:
-    ensure  => $package_ensure,
-    tag     => 'mariadb',
+    ensure => $package_ensure,
+    tag    => 'mariadb',
   }
 
   file { '/var/log/mysql/error.log':

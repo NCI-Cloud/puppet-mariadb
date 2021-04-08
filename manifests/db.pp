@@ -45,9 +45,9 @@ define mariadb::db (
 ) {
 
   database { $name:
-    ensure   => $ensure,
-    charset  => $charset,
-    require  => Class['mariadb::server'],
+    ensure  => $ensure,
+    charset => $charset,
+    require => Class['mariadb::server'],
   }
 
   database_user { "${user}@${host}":
