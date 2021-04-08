@@ -159,8 +159,15 @@ class mariadb::config(
 
   $debiansysmaint_password = $::mariadb::server::debiansysmaint_password
   if $debiansysmaint_password != undef {
-    file { '/etc/mysql/debian.cnf':
-      content => template('mariadb/debian.cnf.erb'),
+    if versioncmp($::mariadb::version, '10.5') >= 0 {
+      warning('MariaDB version 10.5 and greater has deprecated the use of debian-sys-maint')
+      file { '/etc/mysql/debian.cnf':
+        content => file('mariadb/debian.cnf.10.5'),
+      }
+    } else {
+      file { '/etc/mysql/debian.cnf':
+        content => template('mariadb/debian.cnf.erb'),
+      }
     }
   }
 
