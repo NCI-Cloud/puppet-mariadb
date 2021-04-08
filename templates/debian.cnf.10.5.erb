@@ -5,9 +5,15 @@
 [client]
 host     = localhost
 user     = root
+<%- if @real_root_password -%>
+password = <%= @real_root_password %>
+<%- end -%>
 socket   = /var/run/mysqld/mysqld.sock
 [mysql_upgrade]
 host     = localhost
 user     = root
+<%- if @real_root_password -%>
+password = <%= @real_root_password %>
+<%- end -%>
 socket   = /var/run/mysqld/mysqld.sock
 basedir  = /usr
