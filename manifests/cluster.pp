@@ -135,6 +135,11 @@ class mariadb::cluster (
 
     'standalone', default: {
       notice('Standalone mariadb server')
+      class { 'mariadb::cluster::galera':
+        cluster_peer    => '',
+        cluster_enabled => false,
+        *               => $galera_options,
+      }
     }
   }
 

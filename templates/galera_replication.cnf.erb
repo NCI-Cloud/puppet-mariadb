@@ -4,7 +4,11 @@
 [mysqld]
 <%- else -%>
 [galera]
+<%- if @cluster_enabled -%>
 wsrep_on=ON
+<%- else -%>
+wsrep_on=OFF
+<%- end -%>
 <%- end -%>
 wsrep_provider = <%= @wsrep_provider %>
 <%- if @wsrep_provider_options -%>
