@@ -1,6 +1,6 @@
 {
     "name": "ncicloud-mariadb",
-    "version": "1.2.5",
+    "version": "1.2.6",
     "author": "NCI Cloud Team",
     "summary": "Installs, configures and manages Mariadb servers",
     "description": "Installs, configures and manages Mariadb servers",
