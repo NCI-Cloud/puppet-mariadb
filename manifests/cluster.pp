@@ -82,6 +82,12 @@ class mariadb::cluster (
     ensure_packages([$::mariadb::backup_package_name])
   }
 
+  if $build_stage == 'standalone' {
+    $status_type = 'standalone'
+  } else {
+    $status_type = 'cluster'
+  }
+
   class { 'mariadb::cluster::base':
     wsrep_sst_password      => $wsrep_sst_password,
     wsrep_sst_user          => $wsrep_sst_user,
@@ -91,6 +97,7 @@ class mariadb::cluster (
     manage_status           => $manage_status,
     status_user             => $status_user,
     status_password         => $status_password,
+    status_type             => $status_type,
     config_hash             => $config_hash,
     enabled                 => $enabled,
   }

@@ -1,10 +1,19 @@
 class mariadb::cluster::status (
-  $status_user,
-  $status_password,
+  String $status_user,
+  String $status_password,
+  Enum['cluster', 'standalone'] $status_type='cluster',
 ) {
 
+  # The cluster check script verifies that a node is synchronised and a proper
+  # cluster member, the standalone check script simply verifies that the
+  # server is accessible and responding to queries.
+  case $status_type {
+    'cluster':    { $clustercheck = 'mariadb/clustercheck.erb' }
+    'standalone': { $clustercheck = 'mariadb/clustercheck-standalone.erb' }
+  }
+
   file { '/usr/local/bin/clustercheck':
-    content => template('mariadb/clustercheck.erb'),
+    content => template($clustercheck),
     owner   => 'root',
     group   => 'root',
     mode    => '0755',
