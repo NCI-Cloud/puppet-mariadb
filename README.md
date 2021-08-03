@@ -68,6 +68,26 @@ to finalise the cluster configuration
 Note that the `build_stage` parameter defaults to `'standalone'` - it must be
 set to a non-default value to enable clustering support.
 
+### mariadb::haproxy_client
+Creates a local haproxy instance which can be used to connect to the cluster.
+In this mode clients connect to 127.0.0.1:3306 and haproxy forwards the
+connections through to one of the nodes, with the other nodes available as
+backups if the first node is unavailable. Note that the list of servers must
+be manually specified - it is *not* read from the
+`mariadb::cluster::cluster_servers` parameter.
+
+By default a random node from the list of servers is selected as the primary.
+This can be overridden by specifying the primary directly.
+
+By default haproxy uses the cluster status check service created by the
+`mariadb::cluster::status` module (typically by setting
+`mariadb::cluster::manage_status` to `true`). This can be modified using the
+`check_state` parameter.
+
+Note that this *can* be used with a server in `standalone` mode, but some care
+needs to be taken when switching between `standalone` and clustered modes, as
+the standalone and clustered check scripts are incompatible.
+
 ### mariadb::db
 Creates a database with a user and assign some privileges.
 
