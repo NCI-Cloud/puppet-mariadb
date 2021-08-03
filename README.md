@@ -88,6 +88,9 @@ Note that this *can* be used with a server in `standalone` mode, but some care
 needs to be taken when switching between `standalone` and clustered modes, as
 the standalone and clustered check scripts are incompatible.
 
+This adds an optional dependency on `puppetlabs/haproxy` version 3.0.0 or
+greater.
+
 ### mariadb::db
 Creates a database with a user and assign some privileges.
 
