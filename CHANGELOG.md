@@ -7,6 +7,18 @@ and this project (tries to) adhere to
 
 ## [Unreleased]
 
+## [1.2.8] - 2021-08-03
+### Added
+- Add an haproxy_client class to create a local haproxy instance to
+  mediate access to the cluster, allowing high availability for clients
+  with no extra local smarts.
+- Create a meaningful clustercheck script for standalone mode, so that
+  clients using haproxy to access the "cluster" will still see the
+  standalone node as up.
+
+  This is necessary to support temporarily breaking a cluster down to
+  a single standalone node in case of clustering issues.
+
 ## [1.2.7] - 2021-04-08
 ### Fixed
 - Fix broken backwards compatibility for 10.5 nodes which have been
