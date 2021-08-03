@@ -16,6 +16,7 @@ class mariadb::cluster::base (
   $manage_status,
   $status_user,
   $status_password,
+  $status_type,
   $config_hash,
   $enabled,
 ) inherits mariadb::params {
@@ -41,6 +42,7 @@ class mariadb::cluster::base (
     class { 'mariadb::cluster::status':
       status_user     => $status_user,
       status_password => $status_password,
+      status_type     => $status_type,
       require         => Class['mariadb::server'],
     }
   }
