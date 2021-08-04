@@ -7,6 +7,11 @@ and this project (tries to) adhere to
 
 ## [Unreleased]
 
+## [1.2.9] - 2021-08-04
+### Fixed
+- Fix the creation of the wsrep_sst_user - this should be @localhost,
+  not @%, if only to minimise the potential attack surface.
+
 ## [1.2.8] - 2021-08-03
 ### Added
 - Add an haproxy_client class to create a local haproxy instance to
