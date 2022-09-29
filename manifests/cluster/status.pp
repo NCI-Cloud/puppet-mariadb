@@ -1,3 +1,4 @@
+# Configure status check support for the cluster
 class mariadb::cluster::status (
   String $status_user,
   String $status_password,
@@ -7,9 +8,13 @@ class mariadb::cluster::status (
   # The cluster check script verifies that a node is synchronised and a proper
   # cluster member, the standalone check script simply verifies that the
   # server is accessible and responding to queries.
+  #
+  # Note: default is unnecessary as this is testing against an enumerated
+  # type, but is there to shut up warnings.
   case $status_type {
     'cluster':    { $clustercheck = 'mariadb/clustercheck.erb' }
     'standalone': { $clustercheck = 'mariadb/clustercheck-standalone.erb' }
+    default: {}
   }
 
   file { '/usr/local/bin/clustercheck':

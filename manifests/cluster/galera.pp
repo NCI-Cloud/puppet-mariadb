@@ -69,7 +69,7 @@ class mariadb::cluster::galera (
   #
   # socat can be installed unconditionally
   package { 'socat':
-    eusnre => 'present',
+    ensure => 'present',
   }
 
   # the xtrabackup/xtrabackup-v2 methods are not supported as of 10.3
