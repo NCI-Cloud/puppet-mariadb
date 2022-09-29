@@ -31,6 +31,14 @@ class mariadb (
   $mirror         = $mariadb::params::default_mirror
 ) inherits mariadb::params {
 
+  # because the version may be the full major.minor.patch /or/ the two part
+  # major.minor, we pull out just the major.minor release as a separate
+  # variable
+  $release = $version ? {
+    /\A(\d+)\.(\d+).*\z/ => "${1}.${2}",
+    default => $version,
+  }
+
   case $::osfamily {
     'RedHat': {
       $server_package_names  = $mariadb::params::server_package_names
@@ -63,6 +71,13 @@ class mariadb (
           $backup_package_name   = 'mariadb-backup'
         }
         '10.5': {
+          $server_package_names  = ['mariadb-server']
+          $cluster_package_names = $server_package_names
+          $client_package_names  = ['mysql-common', 'mariadb-client']
+          $galera_name           = 'galera-4'
+          $backup_package_name   = 'mariadb-backup'
+        }
+        '10.6': {
           $server_package_names  = ['mariadb-server']
           $cluster_package_names = $server_package_names
           $client_package_names  = ['mysql-common', 'mariadb-client']
