@@ -65,8 +65,28 @@ class mariadb::cluster::galera (
     subscribe   => File["${mariadb::params::config_dir}/galera_replication.cnf"],
   }
 
-  if $wsrep_sst_method == 'xtrabackup' or $wsrep_sst_method == 'xtrabackup-v2' {
-    ensure_packages(['percona-xtrabackup'])
+  # Replication support packages
+  #
+  # socat can be installed unconditionally
+  package { 'socat':
+    eusnre => 'present',
   }
 
+  # the xtrabackup/xtrabackup-v2 methods are not supported as of 10.3
+  case $wsrep_sst_method in {
+    'xtrabackup', 'xtrabackup-v2': {
+      if versioncmp($mariadb::version, '10.2') > 0 {
+        fail('percona-xtrabackup is no longer compatible with Mariadb as of 10.3')
+      }
+      package { 'percona-xtrabackup':
+        ensure => $galera_ensure,
+      }
+    }
+    'mariabackup': {
+      package { $mariadb::backup_package_name:
+        ensure => $galera_ensure,
+      }
+    }
+    default: {},
+  }
 }
