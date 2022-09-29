@@ -6,6 +6,7 @@ class mariadb::cluster::config (
   $config_dir           = $mariadb::params::config_dir,
 ) inherits mariadb::params {
 
+  warning("mariadb::cluster::config is deprecated - please use mariadb::cluster::galera")
   include ::mariadb
   $maria_version = $::mariadb::version
 
