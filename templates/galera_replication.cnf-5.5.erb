@@ -1,11 +1,6 @@
 # This file is managed by Puppet. DO NOT EDIT
 
-[galera]
-<%- if @cluster_enabled -%>
-wsrep_on=ON
-<%- else -%>
-wsrep_on=OFF
-<%- end -%>
+[mysqld]
 wsrep_provider = <%= @wsrep_provider %>
 <%- if @wsrep_provider_options -%>
 wsrep_provider_options = "<%= @wsrep_provider_options %>"

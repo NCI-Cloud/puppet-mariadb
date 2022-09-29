@@ -39,8 +39,21 @@ class mariadb::cluster::galera (
     $ipaddress_cluster_iface = lookup("ipaddress_${cluster_iface}")
   }
 
+  # there are enough differences in newer versions of galera to justify this
+  #
+  # Note that this may not work with 5.5, or with anything older than 10.0.
+  # Removing support for older mariadb is something to leave for a 2.0 release.
+  if versioncmp($mariadb::version, '10.2') >= 0 {
+    $galera_template = 'galera_replication.cnf-10.2.erb'
+  } elsif versioncmp($mariadb::version, '5.5') == 0 {
+    $galera_template = 'galera_replication.cnf-5.5.erb'
+  } else {
+    $galera_template = 'galera_replication.cnf.erb'
+  }
+  # this is needed for the older template
+  $mariadb_version = $mariadb::version
   file { "${mariadb::params::config_dir}/galera_replication.cnf":
-    content => template('mariadb/galera_replication.cnf.erb'),
+    content => template("mariadb/${galera_template}"),
     require => Class['mariadb::server'],
   }
 

@@ -19,10 +19,9 @@ wsrep_slave_threads = <%= @wsrep_slave_threads %>
 wsrep_node_address = <%= @ipaddress_cluster_iface %>
 wsrep_node_incoming_address = <%= @ipaddress_cluster_iface %>
 
-binlog_format = ROW
+binlog_format = MIXED
 default_storage_engine = InnoDB
 innodb_autoinc_lock_mode = 2
-innodb_locks_unsafe_for_binlog = 1
 
 <%- if @wsrep_sst_method == 'xtrabackup' or @wsrep_sst_method == 'xtrabackup-v2' -%>
 [sst]
