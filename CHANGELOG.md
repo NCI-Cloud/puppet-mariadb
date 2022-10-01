@@ -6,6 +6,21 @@ and this project (tries to) adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Fixed
+- Better handling of replication support packages. In particular,
+  don't try to install percona-xtrabackup in concert with Mariadb
+  10.3 or greater, as this is not a supported configuration.
+
+## [1.3.0] - 2022-09-29
+### Fixed
+- Clean up of galera configuration.
+
+### Added
+- Add support for installing and configuring MariaDB 10.6. This is
+  the current LTS version, supported until 2026.
+
+### Deprecated
+- Deprecate use of the mariadb::cluster::config class
 
 ## [1.2.9] - 2021-08-04
 ### Fixed
