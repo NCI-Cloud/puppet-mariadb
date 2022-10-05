@@ -11,6 +11,8 @@ and this project (tries to) adhere to
 ### Fixed
 - Stupid typos that broke catalogue build for any clustered
   configuration.
+- Galera requires binlog_format=ROW - this was changed to
+  MIXED due to misreading of MariaDB 10.6 series release notes.
 
 ### Added
 - puppet-syntax checks to the Rakefile . . .
