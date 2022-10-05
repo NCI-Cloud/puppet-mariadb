@@ -1,8 +1,7 @@
 #!/bin/bash
-# put this file to /usr/local/bin
 #
-# This script checks if a mysql server is healthy running on localhost. It will
-# return:
+# This script checks if a mysql/mariadb server is running on the specified
+# bind address and port. It will return:
 #
 # "HTTP/1.x 200 OK\r" (if mysql is running smoothly)
 #
@@ -10,27 +9,34 @@
 #
 # "HTTP/1.x 500 Internal Server Error\r" (else)
 #
-# The purpose of this script is make haproxy capable of monitoring mysql properly
+# The purpose of this script is make haproxy capable of monitoring mysql
+# properly. This version will simply check whether mysql is responding to
+# connections without error, which is suitable for checking the status of
+# a standalone server.
 #
-# Author: Unai Rodriguez
+# Original author: Unai Rodriguez
+# Modified by various people since then.
 #
-# It is recommended that a user with limited privileges is created to be used by
+# It is recommended that a user with minimal privileges is created to be used by
 # this script. Something like this:
 #
-# mysql> GRANT PROCESS on mysql.* TO 'clustercheckuser'@'localhost' \
-#     -> IDENTIFIED BY 'clustercheckpassword!' WITH GRANT OPTION;
+# mysql> CREATE USER 'clustercheckuser'@'localhost' \
+#     -> IDENTIFIED BY 'clustercheckpassword!';
+# mysql> GRANT USAGE on *.* TO 'clustercheckuser'@'localhost';
 # mysql> flush privileges;
 #
-# Modified to report on a standalone node, for cases where the client is
-# running haproxy.
+# Note that this script explicitly connects via a local socket, so the
+# bind address (if any) is irrelevant.
+#
 
-MYSQL_HOST="localhost"
-MYSQL_PORT="3306"
-MYSQL_USERNAME="<%= @status_user %>"
-MYSQL_PASSWORD="<%= @status_password %>"
-
-# simply test whether we can connect and run a very simple query
-if mysql --host="$MYSQL_HOST" --port="$MYSQL_PORT" --user="$MYSQL_USERNAME" --password="$MYSQL_PASSWORD" -e "select 1;" &>/dev/null
+# simple test for whether we can connect and run the simplest of queries.
+mysql_opts=(
+"--protocol=SOCKET"
+"--host=localhost"
+"--user=<%= @status_user %>"
+"--password=<%= @status_password %>"
+)
+if mysql "${mysql_opts[@]}" -e "select 1;" &>/dev/null
 then
     # mysql is fine, return http 200
     /bin/echo -e "HTTP/1.1 200 OK\r\n"

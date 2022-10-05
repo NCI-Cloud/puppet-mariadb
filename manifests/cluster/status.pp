@@ -59,7 +59,7 @@ class mariadb::cluster::status (
   mysql_grant { "${status_user}@localhost/*.*":
     user       => "${status_user}@localhost",
     table      => '*.*',
-    privileges => [ 'PROCESS' ],
+    privileges => [ 'USAGE' ],
   }
 
 }

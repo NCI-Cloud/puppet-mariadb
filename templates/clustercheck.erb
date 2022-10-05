@@ -1,39 +1,56 @@
 #!/bin/bash
-# put this file to /usr/local/bin
 #
-# This script checks if a mysql server is healthy running on localhost. It will
-# return:
+# This script checks if a mariadb/galera server is running on the specified
+# bind address and port, and is a full cluster member. It will return:
 #
-# "HTTP/1.x 200 OK\r" (if mysql is running smoothly)
+# "HTTP/1.x 200 OK\r" (if mysql is running and a full cluster member)
 #
 # - OR -
 #
 # "HTTP/1.x 500 Internal Server Error\r" (else)
 #
-# The purpose of this script is make haproxy capable of monitoring mysql properly
+# The purpose of this script is allow haproxy to check the status of nodes
+# in a mariadb/galera cluster. This version verifies that the node is a
+# fully synchronised cluster member, which is suitable for checking if a
+# cluster node is able to serve clients normally.
 #
-# Author: Unai Rodriguez
+# Original author: Unai Rodriguez
+# Modified by various people since then.
 #
 # It is recommended that a user with limited privileges is created to be used by
 # this script. Something like this:
 #
-# mysql> GRANT PROCESS on mysql.* TO 'clustercheckuser'@'localhost' \
-#     -> IDENTIFIED BY 'clustercheckpassword!' WITH GRANT OPTION;
+# mysql> CREATE USER 'clustercheckuser'@'localhost' \
+#     -> IDENTIFIED BY 'clustercheckpassword!';
+# mysql> GRANT USAGE on *.* TO 'clustercheckuser'@'localhost';
 # mysql> flush privileges;
-
-MYSQL_HOST="localhost"
-MYSQL_PORT="3306"
-MYSQL_USERNAME=<%= @status_user %>
-MYSQL_PASSWORD=<%= @status_password %>
-TMP_FILE="/tmp/clustercheck.out"
-ERR_FILE="/tmp/clustercheck.err"
-
 #
-# We perform a simple query that should return a few results :-p
+# Note that this script explicitly connects via a local socket, so the
+# bind address (if any) is irrelevant.
 #
 
-WSSREP_STATUS=`mysql --host=$MYSQL_HOST --user=$MYSQL_USERNAME --password=$MYSQL_PASSWORD -e "show status like 'wsrep_local_state';" | awk '{if (NR!=1){print $2}}' 2>/dev/null`
-GCOMM_ADDRESS=`mysql --host=$MYSQL_HOST --user=$MYSQL_USERNAME --password=$MYSQL_PASSWORD -e "show variables like 'wsrep_cluster_address';" | awk '{if (NR!=1){print $2}}' 2>/dev/null`
+# standard opts, -B means batch mode with tab separated output, -N skips
+# printing column names - the result is one line per row of output, and
+# two tab separated values per row.
+mysql_opts=(
+"-NB"
+"--protocol=SOCKET"
+"--host=localhost"
+"--user=<%= @status_user %>"
+"--password=<%= @status_password %>"
+)
+
+# these queries tell us whether the node is currently acting as a full
+# member of a galera cluster.
+#
+# Note: wsrep_cluster_address='gcomm://' is the bootstrap state for a
+# cluster node, so regardless of whether it's joined the cluster fully
+# it's not considered up.
+wsrep_query="show status like 'wsrep_local_state';"
+gcomm_query="show variables like 'wsrep_cluster_address';"
+
+WSSREP_STATUS=$(mysql "${mysql_opts[@]}" -e "$wsrep_query" | awk '{if (NR!=0){print $2}}' 2>/dev/null)
+GCOMM_ADDRESS=$(mysql "${mysql_opts[@]}" -e "$gcomm_query" | awk '{if (NR!=0){print $2}}' 2>/dev/null)
 
 if [ "$WSSREP_STATUS" == "4" ] && [ "$GCOMM_ADDRESS" != 'gcomm://' ]
 then
