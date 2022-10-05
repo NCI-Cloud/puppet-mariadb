@@ -7,7 +7,15 @@ and this project (tries to) adhere to
 
 ## [Unreleased]
 
-## [1.3.1] - 2022-10-05
+## [1.3.2] - 2022-10-05
+### Fixed
+- Stupid typos that broke catalogue build for any clustered
+  configuration.
+
+### Added
+- puppet-syntax checks to the Rakefile . . .
+
+## [1.3.1] - 2022-10-05 [YANKED]
 ### Fixed
 - Better handling of replication support packages. In particular,
   don't try to install percona-xtrabackup in concert with Mariadb

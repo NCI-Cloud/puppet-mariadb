@@ -73,7 +73,7 @@ class mariadb::cluster::galera (
   }
 
   # the xtrabackup/xtrabackup-v2 methods are not supported as of 10.3
-  case $wsrep_sst_method in {
+  case $wsrep_sst_method {
     'xtrabackup', 'xtrabackup-v2': {
       if versioncmp($mariadb::version, '10.2') > 0 {
         fail('percona-xtrabackup is no longer compatible with Mariadb as of 10.3')
@@ -87,6 +87,6 @@ class mariadb::cluster::galera (
         ensure => $galera_ensure,
       }
     }
-    default: {},
+    default: {}
   }
 }
