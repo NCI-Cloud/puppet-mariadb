@@ -6,10 +6,18 @@ and this project (tries to) adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.3.1] - 2022-10-05
 ### Fixed
 - Better handling of replication support packages. In particular,
   don't try to install percona-xtrabackup in concert with Mariadb
   10.3 or greater, as this is not a supported configuration.
+- Fix issue with the check scripts being unable to connect to the
+  local server. This was a result of the scripts specifying the
+  `--port=` option on the mysql command line, which as of MariaDB
+  10.6.1 forces the use of a TCP connection even when
+  `--host=localhost` is specified. Please see discussion at
+  https://jira.mariadb.org/browse/MDEV-14974 for more detail.
 
 ## [1.3.0] - 2022-09-29
 ### Fixed
