@@ -7,6 +7,11 @@ and this project (tries to) adhere to
 
 ## [Unreleased]
 
+## [1.3.3] - 2022-10-15
+### Changed
+- Moved from sks-keyservers.net to keyserver.ubuntu.com, as sks-keyservers.net
+  is no longer available.
+
 ## [1.3.2] - 2022-10-05
 ### Fixed
 - Stupid typos that broke catalogue build for any clustered
