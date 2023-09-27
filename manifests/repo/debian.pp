@@ -32,6 +32,8 @@ class mariadb::repo::debian {
     options => $key_options,
   }
 
-  Apt::Source <| title == 'mariadb' |> -> Class['apt::update'] -> Package <| tag == 'mariadb' |>
+  # Note: we don't need to explicitly refer to the apt:source we just defined,
+  # because the apt module handles that for us.
+  Class['apt::update'] -> Package <| tag == 'mariadb' |>
 
 }

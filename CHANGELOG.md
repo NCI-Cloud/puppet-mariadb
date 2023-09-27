@@ -6,6 +6,8 @@ and this project (tries to) adhere to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- Minor tweaks to the Debian package installation.
 
 ## [1.3.3] - 2022-10-15
 ### Changed
