@@ -9,6 +9,7 @@ and this project (tries to) adhere to
 ### Changed
 
 ### Fixed
+- Replace use of `is_hash()` with type match, resolving issues with puppet7.
 
 ### Added
 

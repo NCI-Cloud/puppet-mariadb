@@ -89,7 +89,7 @@ define mariadb::server::config (
   include mariadb::params
   include mariadb::config
 
-  if is_hash($settings) {
+  if $settings =~ Hash {
     $content = template('mariadb/my.conf.cnf.erb')
   } else {
     $content = $settings
