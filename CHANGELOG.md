@@ -7,7 +7,15 @@ and this project (tries to) adhere to
 
 ## [Unreleased]
 ### Changed
+
+### Fixed
+
+### Added
+
+## [1.3.4] - 2024-06-07
+### Changed
 - Minor tweaks to the Debian package installation.
+- Raised puppet/xinetd upper bound to <4.0.0.
 
 ## [1.3.3] - 2022-10-15
 ### Changed
