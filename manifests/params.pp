@@ -17,7 +17,7 @@ class mariadb::params {
   $etc_root_password     = false
   $ssl                   = false
   $restart               = true
-  $slave_threads         = $::processorcount * 2
+  $slave_threads         = $facts['processors']['count'] * 2
   $version               = '5.5'
   $server_package_ensure = 'installed'
 
@@ -32,7 +32,7 @@ class mariadb::params {
   # let puppet guess the service provider, but allow a user override
   $service_provider    = undef
 
-  case $::osfamily {
+  case $facts['os']['family'] {
     'RedHat': {
       $basedir                = '/usr'
       $datadir                = '/var/lib/mysql'
@@ -62,17 +62,18 @@ class mariadb::params {
       $wsrep_provider         = '/usr/lib64/galera/libgalera_smm.so'
       $default_mirror         = '"http://yum.mariadb.org'
       $backup_package_name    = 'MariaDB-backup'
+      $xz_package_name        = 'xz'
     }
 
     'Debian': {
       $basedir                = '/usr'
       $datadir                = '/var/lib/mysql'
       $tmpdir                 = '/tmp'
-      if $::lsbdistid == 'Ubuntu' and versioncmp($::operatingsystemrelease, '16.04') >= 0 {
+      if $facts['os']['distro']['id'] == 'Ubuntu' and versioncmp($facts['os']['release']['full'], '16.04') >= 0 {
         $service_name         = 'mysql'
         $cluster_package_names  = ['mariadb-galera-server']
         $galera_package_name    = 'galera-3'
-      } elsif $::lsbdistid == 'Ubuntu' and versioncmp($::operatingsystemrelease, '18.04') >= 0 {
+      } elsif $facts['os']['distro']['id'] == 'Ubuntu' and versioncmp($facts['os']['release']['full'], '18.04') >= 0 {
         $service_name         = 'mariadb'
         $cluster_package_names  = ['mariadb-server']
         $galera_package_name    = 'galera-3'
@@ -102,10 +103,11 @@ class mariadb::params {
       $wsrep_provider         = '/usr/lib/galera/libgalera_smm.so'
       $default_mirror         = 'http://mirror.aarnet.edu.au/pub/MariaDB'
       $backup_package_name    = 'mariadb-backup-10.1'
+      $xz_package_name        = 'xz-utils'
     }
 
     default: {
-      fail("Unsupported osfamily: ${::osfamily} operatingsystem: ${::operatingsystem}, module ${module_name} only support osfamily RedHat, Debian")
+      fail("Unsupported osfamily: ${facts['os']['family']} operatingsystem: ${facts['os']['name']}, module ${module_name} only support osfamily RedHat, Debian")
     }
   }
 

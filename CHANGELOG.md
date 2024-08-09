@@ -7,11 +7,13 @@ and this project (tries to) adhere to
 
 ## [Unreleased]
 ### Changed
+- Default compression format for backups changed to zstd.
 
 ### Fixed
 - Replace use of `is_hash()` with type match, resolving issues with puppet7.
 
 ### Added
+- Support for zstd compression of backups.
 
 ## [1.3.4] - 2024-06-07
 ### Changed

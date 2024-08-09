@@ -37,9 +37,9 @@ class mariadb::backup (
   $onefile = true,
   $ensure = 'present',
   $backupmethod = 'mysqldump',
-  $compresstype = 'bzip2',
+  $compresstype = 'zstd',
   $compressparallel = false,
-  $compressthreads = min($::processorcount/2, 2),
+  $compressthreads = min($facts['processors']['count']/2, 2),
 ) {
 
   include ::mariadb
@@ -64,7 +64,17 @@ class mariadb::backup (
 
   if $backupcompress {
     case $compresstype {
+      'zstd': {
+        ensure_packages(['zstd'])
+        $compress_extension = 'zst'
+        if $compressparallel {
+          $compress_command = "pzstd -c -p ${compressthreads}"
+        } else {
+          $compress_command = 'zstd'
+        }
+      }
       'gzip': {
+        ensure_packages(['gzip'])
         $compress_extension = 'gz'
         if $compressparallel {
           ensure_packages(['pigz'])
@@ -74,6 +84,9 @@ class mariadb::backup (
         }
       }
       'xz': {
+        # unlike the other options, xz is packaged under different names on
+        # Debian and RH
+        ensure_packages([$mariadb::params::xz_package_name])
         $compress_extension = 'xz'
         if $compressparallel {
           ensure_packages(['pixz'])
@@ -83,6 +96,7 @@ class mariadb::backup (
         }
       }
       'bzip2': {
+        ensure_packages(['bzip2'])
         $compress_extension = 'bz2'
         if $compressparallel {
           ensure_packages(['pbzip2'])
@@ -92,7 +106,7 @@ class mariadb::backup (
         }
       }
       default: {
-          fail('Unknown compression type. Must be one of gzip, xz or bzip2')
+          fail('Unknown compression type. Must be one of zstd, gzip, xz or bzip2')
       }
     }
 
@@ -126,7 +140,7 @@ class mariadb::backup (
   exec { "Create ${backupdir}":
     creates => $backupdir,
     command => "mkdir -p ${backupdir}",
-    path    => $::path
+    path    => $facts['path']
   } -> file { 'mysqlbackupdir':
     ensure => 'directory',
     path   => $backupdir,
