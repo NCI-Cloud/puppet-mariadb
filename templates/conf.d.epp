@@ -6,7 +6,7 @@
 #
 # Description: <%= $description %>
 
-<% $sections.each |String $section, Hash[String, Variant[String, Array[String]]] $values| { -%>
+<% $sections.each |String $section, Hash[String, Variant[String, Array[String], Boolean, Integer]] $values| { -%>
 [<%= $section %>]
 <%# Note: the '_comment' key sets a section header comment; a key starting     -%>
 <%# with '#' sets a comment in-line - hashes iterate in their insertion        -%>
@@ -18,7 +18,8 @@
 <%   } -%>
 <%   $values.each |String $key, Variant[String, Array[String], Boolean, Integer] $value| { -%>
 <%# skip the section comment while iterating -%>
-<%     if $key == '_comment' { next() } -%>
+<%     if $key == '_comment' { -%>
+<%       next() -%>
 <%     } elsif $key[0] == '#' { -%>
 <%# just the key, the value is ignored completely -%>
 <%= $key %>
@@ -27,13 +28,13 @@
 <%= $key %>=true
 <%       } else { -%>
 <%= $key %>=false
-<%       }
+<%       } -%>
 <%     } elsif $value =~ Array[String] { -%>
 <%       $value.sort.each |String $one_value| { -%>
 <%= $key %>=<%= $one_value %>
 <%       } -%>
 <%     } else { -%> 
 <%= $key %>=<%= String($value) %>
-<%     }
+<%     } -%>
 <%   } -%>
 <% } -%>
