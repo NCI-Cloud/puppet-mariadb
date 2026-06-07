@@ -7,6 +7,7 @@ and this project (tries to) adhere to
 
 ## [Unreleased]
 ### Changed
+- Added type information to all classes.
 
 ### Fixed
 

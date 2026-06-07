@@ -14,8 +14,8 @@
 # Sample Usage:
 #
 class mariadb::python(
-  $package_name   = $mariadb::params::python_package_name,
-  $package_ensure = 'present'
+  String $package_name   = $mariadb::params::python_package_name,
+  String $package_ensure = 'present'
 ) inherits mariadb::params {
 
   package { 'python-mysqldb':

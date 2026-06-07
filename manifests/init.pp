@@ -25,10 +25,10 @@
 # Sample Usage:
 #
 class mariadb (
-  $package_ensure = 'present',
-  $version        = $mariadb::params::version,
-  $manage_repo    = true,
-  $mirror         = $mariadb::params::default_mirror
+  String $package_ensure = 'present',
+  String $version        = $mariadb::params::version,
+  Boolean $manage_repo    = true,
+  String $mirror         = $mariadb::params::default_mirror
 ) inherits mariadb::params {
 
   # because the version may be the full major.minor.patch /or/ the two part

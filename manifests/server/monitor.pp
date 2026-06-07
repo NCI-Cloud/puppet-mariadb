@@ -1,7 +1,7 @@
 class mariadb::server::monitor (
-  $mariadb_monitor_username,
-  $mariadb_monitor_password,
-  $mariadb_monitor_hostname
+  String $mariadb_monitor_username,
+  String $mariadb_monitor_password,
+  String $mariadb_monitor_hostname
 ) {
 
   Class['mariadb::server'] -> Class['mariadb::server::monitor']

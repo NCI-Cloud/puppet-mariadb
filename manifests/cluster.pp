@@ -11,36 +11,50 @@
 #     or IP addresses.
 #   [*cluster_iface*]
 #     The host interface that the cluster will communicate with.
+#     Default: eth0
 #   [*wsrep_sst_user*]
 #     The replication user name.
+#     Default: root
 #   [*wsrep_cluster_name*]
 #     The unique name for the cluster.
+#     Deafult: my_wsrep_cluster
 #   [*status_user*]
 #     The cluster status user name.
+#     Default: clusterstatus
 #   [*wsrep_sst_method*]
 #     The method to use for replication.
+#     Default: mysqldump
 #   [*wsrep_slave_threads*]
 #     Number of threads to use for replication.
 #   [*package_ensure*]
 #     Ensure value for the server packages. Set to `present` or a version number.
 #   [*galera_ensure*]
 #     The galera package ensure value.
+#   [*debiansysmaint_password*]
+#     The password for the Debian system maintenance password.
+#     Default: undefined
 #   [*status_password*]
 #     The password for the status user.
+#     Default: undefined
 #   [*config_hash*]
 #     hash of config parameters that need to be set.
+#     Default: {}
 #   [*enabled*]
 #     If true, enable the service to start on boot.
+#     Default: true
+#   [*manage_service*]
+#     If true, manage the service status ourselves.
+#     Default: true
 #   [*single_cluster_peer*]
 #     If true, configure each node to sync with only one other node. Sets
 #     `wsrep_cluster_address = 'gcomm://192.168.0.1'`. If false,
 #     sets `wsrep_cluster_address = 'gcomm://192.168.0.1,192.168.0.2,192.168.0.3'`,
 #     etc. based on number of nodes and the IP/hostname as set in 
 #     `cluster_servers`.
+#     Default: false
 #   [*manage_status*]
 #     If true, manage the status user and status script.
-#   [*manage_repo*]
-#     If true, manage the yum or apt repo.
+#     Default: true
 #   [*build_stage*]
 #     Where in the cluster build process the node is. Accepted values are
 #     'bootstrap', which must be used on a single node in order to bootstrap the
@@ -55,23 +69,28 @@
 # Sample Usage:
 #
 class mariadb::cluster (
-  $wsrep_sst_password,
-  $cluster_servers,
-  $cluster_iface           = 'eth0',
-  $wsrep_sst_user          = 'root',
-  $wsrep_cluster_name      = 'my_wsrep_cluster',
-  $status_user             = 'clusterstatus',
-  $wsrep_sst_method        = 'mysqldump',
-  $wsrep_slave_threads     = $mariadb::params::slave_threads,
-  $package_ensure          = $mariadb::params::cluster_package_ensure,
-  $galera_ensure           = $mariadb::params::cluster_package_ensure,
-  $debiansysmaint_password = undef,
-  $status_password         = undef,
-  $config_hash             = {},
-  $enabled                 = true,
-  $single_cluster_peer     = true,
-  $manage_status           = true,
-  $build_stage             = 'standalone',
+  String $wsrep_sst_password,
+  Array[String] $cluster_servers,
+  String $cluster_iface          = 'eth0',
+  String $wsrep_sst_user         = 'root',
+  String $wsrep_cluster_name     = 'my_wsrep_cluster',
+  String $status_user            = 'clusterstatus',
+  String $wsrep_sst_method       = 'mysqldump',
+  Integer $wsrep_slave_threads   = $mariadb::params::slave_threads,
+  String $package_ensure         = $mariadb::params::cluster_package_ensure,
+  String $galera_ensure          = $mariadb::params::cluster_package_ensure,
+  Optional[String] $debiansysmaint_password = undef,
+  Optional[String] $status_password = undef,
+  Hash[String, Any] $config_hash = {},
+  Boolean $enabled               = true,
+  Boolean $manage_service        = true,
+  Boolean $single_cluster_peer   = false,
+  Boolean $manage_status         = true,
+  Enum[
+    'bootstrap',
+    'peer',
+    'standalone'
+  ] $build_stage                 = 'standalone',
 ) inherits mariadb::params {
 
   if $build_stage == 'standalone' {
@@ -92,6 +111,7 @@ class mariadb::cluster (
     status_type             => $status_type,
     config_hash             => $config_hash,
     enabled                 => $enabled,
+    manage_service          => $manage_service,
   }
 
   $galera_options = {

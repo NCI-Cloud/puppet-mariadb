@@ -29,17 +29,17 @@
 #   }
 #
 class mariadb::backup (
-  $backupuser,
-  $backuppassword,
-  $backupdir,
-  $backupdays = 30,
-  $backupcompress = true,
-  $onefile = true,
-  $ensure = 'present',
-  $backupmethod = 'mysqldump',
-  $compresstype = 'zstd',
-  $compressparallel = false,
-  $compressthreads = min($facts['processors']['count']/2, 2),
+  String $backupuser,
+  String $backuppassword,
+  String $backupdir,
+  Integer $backupdays = 30,
+  Boolean $backupcompress = true,
+  Boolean $onefile = true,
+  String $ensure = 'present',
+  Enum['mysqldump', 'mariabackup'] $backupmethod = 'mysqldump',
+  Enum['zstd', 'gzip', 'xz', 'bzipd'] $compresstype = 'zstd',
+  Boolean $compressparallel = false,
+  Integer $compressthreads = Integer(min($facts['processors']['count']/2, 2)),
 ) {
 
   include ::mariadb

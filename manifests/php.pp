@@ -8,8 +8,8 @@
 #   [*packagee*] - name of package
 #
 class mariadb::php(
-  $package_name   = $mariadb::params::php_package_name,
-  $package_ensure = 'present'
+  String $package_name   = $mariadb::params::php_package_name,
+  String $package_ensure = 'present'
 ) inherits mariadb::params {
 
   package { 'php-mysql':

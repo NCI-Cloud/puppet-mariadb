@@ -82,9 +82,9 @@
 #   port = 3300
 #
 define mariadb::server::config (
-  $settings,
-  $notify_service = true,
-  $config_dir     = $mariadb::params::config_dir,
+  Variant[String, Hash] $settings,
+  Boolean $notify_service = true,
+  String $config_dir      = $mariadb::params::config_dir,
 ) {
   include mariadb::params
   include mariadb::config

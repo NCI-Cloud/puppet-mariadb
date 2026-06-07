@@ -8,17 +8,18 @@
 #
 #
 class mariadb::cluster::base (
-  $wsrep_sst_password,
-  $wsrep_sst_user,
-  $package_names,
-  $package_ensure,
-  $debiansysmaint_password,
-  $manage_status,
-  $status_user,
-  $status_password,
-  $status_type,
-  $config_hash,
-  $enabled,
+  String $wsrep_sst_password,
+  String $wsrep_sst_user,
+  Array[String] $package_names,
+  String $package_ensure,
+  Optional[String] $debiansysmaint_password,
+  Boolean $manage_status,
+  String $status_user,
+  String $status_password,
+  Enum['cluster', 'standalone'] $status_type,
+  Hash[String, Any] $config_hash,
+  Boolean $enabled,
+  Boolean $manage_service,
 ) inherits mariadb::params {
 
   class { 'mariadb::server':
@@ -27,6 +28,7 @@ class mariadb::cluster::base (
     debiansysmaint_password => $debiansysmaint_password,
     config_hash             => $config_hash,
     enabled                 => $enabled,
+    manage_service          => $manage_service,
   }
 
   class { 'mariadb::cluster::auth':

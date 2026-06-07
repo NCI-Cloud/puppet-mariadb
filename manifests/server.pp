@@ -29,23 +29,17 @@
 # Sample Usage:
 #
 class mariadb::server (
-  $package_ensure          = $mariadb::params::server_package_ensure,
-  $package_names           = undef,
-  $service_name            = $mariadb::params::service_name,
-  $service_provider        = $mariadb::params::service_provider,
-  $debiansysmaint_password = undef,
-  $config_hash             = {},
-  $enabled                 = true,
-  $manage_service          = true,
+  String $package_ensure         = $mariadb::params::server_package_ensure,
+  Array[String] $package_names   = $mariadb::params::server_package_names,
+  String $service_name           = $mariadb::params::service_name,
+  Optional[String] $service_provider = $mariadb::params::service_provider,
+  Optional[String] $debiansysmaint_password = undef,
+  Hash[String, Any] $config_hash = {},
+  Boolean $enabled               = true,
+  Boolean $manage_service        = true,
 ) inherits mariadb::params {
 
   include ::mariadb
-
-  if $package_names == undef {
-    $real_package_names = $::mariadb::server_package_names
-  } else {
-    $real_package_names = $package_names
-  }
 
   Class['mariadb::server'] -> Class['mariadb::config']
 
@@ -53,14 +47,14 @@ class mariadb::server (
 
   create_resources( 'class', $config_class )
 
-  package { $real_package_names:
+  package { $package_names:
     ensure => $package_ensure,
     tag    => 'mariadb',
   }
 
   file { '/var/log/mysql/error.log':
     owner   => mysql,
-    require => Package[$real_package_names],
+    require => Package[$package_names],
   }
 
   if $enabled {
@@ -77,14 +71,14 @@ class mariadb::server (
       owner   => 'mysql',
       group   => 'root',
       mode    => '0755',
-      require => Package[$real_package_names],
+      require => Package[$package_names],
     }
 
     -> service { 'mariadb':
       ensure   => $service_ensure,
       name     => $service_name,
       enable   => $enabled,
-      require  => Package[$real_package_names],
+      require  => Package[$package_names],
       provider => $service_provider,
     }
   }

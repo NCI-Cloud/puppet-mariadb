@@ -1,6 +1,6 @@
 class mariadb::cluster::auth (
-  $wsrep_sst_password,
-  $wsrep_sst_user     = 'root',
+  String $wsrep_sst_password,
+  String $wsrep_sst_user = 'root',
 ) {
 
   database_user { "${wsrep_sst_user}@localhost":

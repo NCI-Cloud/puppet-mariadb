@@ -12,8 +12,8 @@
 # Sample Usage:
 #
 class mariadb::java (
-  $package_name   = $mariadb::params::java_package_name,
-  $package_ensure = 'present'
+  String $package_name   = $mariadb::params::java_package_name,
+  String $package_ensure = 'present'
 ) inherits mariadb::params {
 
   package { 'mysql-connector-java':

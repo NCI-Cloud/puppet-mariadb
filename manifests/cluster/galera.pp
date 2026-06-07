@@ -9,7 +9,7 @@ class mariadb::cluster::galera (
   String $wsrep_sst_user,
   String $wsrep_sst_method,
   String $wsrep_cluster_name,
-  String $wsrep_slave_threads,
+  Integer $wsrep_slave_threads,
   String $galera_name,
   String $galera_ensure,
   String $cluster_iface,
