@@ -145,13 +145,11 @@ class mariadb::cluster::galera (
     sections    => $sections,
     require     => Class['mariadb::server'],
   }
-
-  exec { 'mariadb-galera-restart':
+  ~> exec { 'mariadb-galera-restart':
     command     => "service ${service_name} restart",
     logoutput   => on_failure,
     path        => '/sbin:/usr/sbin:/usr/bin:/bin/',
     refreshonly => true,
-    subscribe   => File["${mariadb::params::config_dir}/galera_replication.cnf"],
   }
 
 }
