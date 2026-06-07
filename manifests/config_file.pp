@@ -51,7 +51,9 @@ define mariadb::config_file(
     String, Hash[
       String, Variant[
         String,
-        Array[ String ]
+        Array[ String ],
+        Boolean,
+        Integer,
       ]
     ]
   ] $sections,

@@ -1,6 +1,6 @@
 <% |
     String $description,
-    Hash[String, Hash[String, Variant[String, Array[String]]] $sections,
+    Hash[String, Hash[String, Variant[String, Array[String], Boolean, Integer]] $sections,
 | -%>
 # Managed by Puppet - local changes will be overridden!
 #
@@ -16,7 +16,7 @@
 <%   if '_comment' in $values { -%>
 # <%= $values['_comment'] %>
 <%   } -%>
-<%   $values.each |String $key, Variant[String, Array[String]] $value| { -%>
+<%   $values.each |String $key, Variant[String, Array[String], Boolean, Integer] $value| { -%>
 <%# skip the section comment while iterating -%>
 <%     if $key == '_comment' { next() } -%>
 <%     } elsif $key[0] == '#' { -%>
