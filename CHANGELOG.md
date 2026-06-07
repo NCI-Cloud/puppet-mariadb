@@ -10,6 +10,10 @@ and this project (tries to) adhere to
 - Default compression format for backups changed to zstd.
 - Generate galera config dynamically rather than with version-dependent
   templates.
+- Reworked handling of Debian repository setup to support newer versions of
+  apt and the puppetlabs/apt module.
+- Bumped puppetlabs/apt dependencies to >= 9.2.0 <12.0.0, to ensure
+  apt::keyring is available.
 
 ### Fixed
 - Replace use of `is_hash()` with type match, resolving issues with puppet7.
