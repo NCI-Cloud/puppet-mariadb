@@ -1,4 +1,4 @@
-<- |
+<%- |
    String $user,
    String $password,
    String $backupdir,
@@ -7,7 +7,7 @@
    Boolean $compress = True,
    Optional[String] $compress_command = undef,
    Optional[String] $compress_extension = undef,
-| ->
+| -%>
 #!/bin/sh
 #
 # MySQL Backup Script
