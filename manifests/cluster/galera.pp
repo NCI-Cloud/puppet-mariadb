@@ -41,12 +41,13 @@ class mariadb::cluster::galera (
     }
   } else {
     $cluster_options = {
-      '# galera in mariadb 5.5 is always on if the module is available' => undef,
+      '# galera in mariadb 5.5 is always on if the module is available' => 'ignored',
     }
   }
 
   # wsrep provider and options
   $base_provider_options = {
+    '# provider options' => 'ignored',
     wsrep_provider => $mariadb::params::wsrep_provider,
   }
   if $wsrep_provider_options {
@@ -57,6 +58,7 @@ class mariadb::cluster::galera (
 
   # general wsrep configuration
   $common_wsrep_options = {
+    '# common wsrep options' => 'ignored',
     wsrep_node_name => $facts['networking']['hostname'],
     wsrep_cluster_address => "gcomm://${cluster_peer}",
     wsrep_cluster_name => $wsrep_cluster_name,
@@ -78,6 +80,7 @@ class mariadb::cluster::galera (
     $ipaddress_cluster_iface = lookup("ipaddress_${cluster_iface}")
   }
   $node_wsrep_options = {
+    '# node wsrep options' => 'ignored',
     wsrep_node_address => $ipaddress_cluster_iface,
     wsrep_node_incoming_address => $ipaddress_cluster_iface,
   }
@@ -85,6 +88,7 @@ class mariadb::cluster::galera (
 
   # server options
   $common_server_options = {
+    '# server options' => 'ignored',
     binlog_format => 'ROW',
     default_storage_engine => 'InnoDB',
     innodb_autoinc_lock_mode => '2',

@@ -25,16 +25,16 @@
 <%= $key %>
 <%     } elsif $value =~ Boolean { -%>
 <%       if $value { -%>
-<%= $key %>=true
+<%= $key %> = true
 <%       } else { -%>
-<%= $key %>=false
+<%= $key %> = false
 <%       } -%>
 <%     } elsif $value =~ Array[String] { -%>
 <%       $value.sort.each |String $one_value| { -%>
-<%= $key %>=<%= $one_value %>
+<%= $key %> = <%= $one_value %>
 <%       } -%>
 <%     } else { -%> 
-<%= $key %>=<%= String($value) %>
+<%= $key %> = <%= String($value) %>
 <%     } -%>
 <%   } -%>
 <% } -%>
