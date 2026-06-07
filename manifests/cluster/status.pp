@@ -38,7 +38,7 @@ class mariadb::cluster::status (
   }
 
   # when doing maintenance, stop puppet and adjust this link to point at the
-  # maintenance script 
+  # maintenance script
   file { '/usr/local/bin/clustercheck':
     ensure => link,
     target => '/usr/local/bin/clustercheck-operational',

@@ -1,7 +1,7 @@
-<- |
-   String $status_user,
-   String $status_password,
-| ->
+<%- |
+    String $status_user,
+    String $status_password,
+| -%>
 #!/bin/bash
 #
 # This script checks if a mariadb/galera server is running on the specified
