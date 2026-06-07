@@ -59,17 +59,14 @@ define mariadb::config_file(
   ] $sections,
   Enum['present', 'absent'] $ensure = present,
 ) {
-  
+
   $epp_params = {
     description => $description,
     sections => $sections,
   }
 
   # the conf.d directory needs to exist regardless of the state of this file
-  file { $dir:
-    ensure => directory,
-  }
-  -> file { "${dir}/${order}-${name}.cnf":
+  file { "${dir}/${order}-${name}.cnf":
     ensure  => $ensure,
     group   => $mariadb::params::root_group,
     mode    => '0644',

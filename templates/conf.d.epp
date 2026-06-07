@@ -1,6 +1,6 @@
 <% |
     String $description,
-    Hash[String, Hash[String, Variant[String, Array[String], Boolean, Integer]] $sections,
+    Hash[String, Hash[String, Variant[String, Array[String], Boolean, Integer]]] $sections,
 | -%>
 # Managed by Puppet - local changes will be overridden!
 #
