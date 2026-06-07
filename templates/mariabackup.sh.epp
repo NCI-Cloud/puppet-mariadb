@@ -1,0 +1,46 @@
+<- |
+   String $user,
+   String $password,
+   String $backupdir,
+   Integer $backupdays,
+   Boolean $onefile = True,
+   Boolean $compress = True,
+   Optional[String] $compress_command = undef,
+   Optional[String] $compress_extension = undef,
+| ->
+#!/bin/sh
+#
+# https://mariadb.com/kb/en/library/using-encryption-and-compression-tools-with-mariabackup/
+#
+##### START CONFIG ###################################################
+
+USER=<%= $user %>
+PASS=<%= $password %>
+DIR=<%= $backupdir %>
+DAYS=<%= $backupdays %>
+
+##### STOP CONFIG ####################################################
+CREDS="-u$USER -p$PASS"
+MARIABACKUP="mariabackup $CREDS --lock-ddl-per-table --backup --stream=xbstream --open-files-limit=4096 --galera-info"
+DATE=$(date +%Y%m%d-%H%M%S)
+PATH=/usr/bin:/usr/sbin:/bin:/sbin
+
+[ -d "$DIR" ] && find "$DIR" -type f -mtime +$DAYS -delete
+
+umask 0077
+
+<%- if $onefile { -%>
+TARGET="maria_backup_$DATE"
+FNAME="$DIR/$TARGET.bin<% if $compress { %>.<%= $compress_extension %><% } %>"
+{ $MARIABACKUP <% if $compress { %>| <%= $compress_command %> <% } %> > $FNAME.inprogress; } 2> $DIR/$TARGET.log
+mv $FNAME.inprogress $FNAME
+sha256sum $FNAME > $FNAME.sha256
+<%- } else { -%>
+for DB in $(mysql $CREDS -N -s -e "show databases;"); do
+    TARGET="maria_backup_$DATE-$DB"
+    FNAME="$DIR/$TARGET.bin<% if $compress { %>.<%= $compress_extension %><% } %>"
+    { $MARIABACKUP --databases $DB <% if $compress { %>| <%= $compress_command %> <% } %> >$FNAME.inprogress; } 2> $DIR/$TARGET.log
+    mv $FNAME.inprogress $FNAME
+    sha256sum $FNAME > $FNAME.sha256
+done
+<%- } -%>

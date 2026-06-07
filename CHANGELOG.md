@@ -11,9 +11,12 @@ and this project (tries to) adhere to
 
 ### Fixed
 - Replace use of `is_hash()` with type match, resolving issues with puppet7.
+- Replace backupscript erb templates with epp.
 
 ### Added
 - Support for zstd compression of backups.
+- Generate sha256sums of backup files to support basic integrity checks for
+  off-site storage/replication.
 
 ## [1.3.4] - 2024-06-07
 ### Changed

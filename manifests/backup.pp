@@ -128,13 +128,24 @@ class mariadb::backup (
     require => File[$backupscript],
   }
 
+  $epp_params = {
+    user => $backupuser,
+    password => $backuppassword,
+    backupdir => $backupdir,
+    backupdays => $backupdays,
+    onefile => $onefile,
+    compress => $backupcompress,
+    compress_command => $compress_command,
+    compress_extension => $compress_extension,
+  }
+
   file { $backupscript:
     ensure  => $ensure,
     path    => "/usr/local/sbin/${backupscript}",
     mode    => '0700',
     owner   => 'root',
     group   => 'root',
-    content => template("mariadb/${backupscript}.erb"),
+    content => epp("mariadb/${backupscript}.epp", $epp_params),
   }
 
   exec { "Create ${backupdir}":
