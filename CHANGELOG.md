@@ -11,7 +11,10 @@ and this project (tries to) adhere to
 
 ### Fixed
 - Replace use of `is_hash()` with type match, resolving issues with puppet7.
+- Add Content-Length header to health check scripts, to make newer haproxy
+  versions happy.
 - Replace backupscript erb templates with epp.
+- Replace clustercheck erb templates with epp.
 
 ### Added
 - Support for zstd compression of backups.

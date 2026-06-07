@@ -12,13 +12,19 @@ class mariadb::cluster::status (
   # Note: default is unnecessary as this is testing against an enumerated
   # type, but is there to shut up warnings.
   case $status_type {
-    'cluster':    { $clustercheck = 'mariadb/clustercheck.erb' }
-    'standalone': { $clustercheck = 'mariadb/clustercheck-standalone.erb' }
+    'cluster':    { $clustercheck = 'mariadb/clustercheck.epp' }
+    'standalone': { $clustercheck = 'mariadb/clustercheck-standalone.epp' }
     default: {}
   }
 
-  file { '/usr/local/bin/clustercheck':
-    content => template($clustercheck),
+  # the operational version does the proper checks, the maintenance version
+  # always says no, go away
+  $clustercheck_epp_params = {
+    status_user => $status_user,
+    status_password => $status_password,
+  }
+  file { '/usr/local/bin/clustercheck-operational':
+    content => epp($clustercheck, $clustercheck_epp_params),
     owner   => 'root',
     group   => 'root',
     mode    => '0755',
@@ -29,6 +35,13 @@ class mariadb::cluster::status (
     owner  => 'root',
     group  => 'root',
     mode   => '0755',
+  }
+
+  # when doing maintenance, stop puppet and adjust this link to point at the
+  # maintenance script 
+  file { '/usr/local/bin/clustercheck':
+    ensure => link,
+    target => '/usr/local/bin/clustercheck-operational',
   }
 
   augeas { 'mysqlchk':
