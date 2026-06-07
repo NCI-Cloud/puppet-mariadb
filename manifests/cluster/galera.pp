@@ -18,6 +18,7 @@ class mariadb::cluster::galera (
 ) inherits mariadb::params {
 
   $service_name = $mariadb::params::service_name
+  $config_dir = $mariadb::params::config_dir
 
   # packages - galera, and socat (for replication)
   package { $galera_name:
@@ -139,7 +140,7 @@ class mariadb::cluster::galera (
   }
   mariadb::config_file { 'galera_replication':
     ensure      => present,
-    dir         => $mariadb::params::config_dir,
+    dir         => $config_dir,
     order       => 80,
     description => 'Galera Replication configuration file.',
     sections    => $sections,
@@ -150,6 +151,11 @@ class mariadb::cluster::galera (
     logoutput   => on_failure,
     path        => '/sbin:/usr/sbin:/usr/bin:/bin/',
     refreshonly => true,
+  }
+
+  # clean up of the old galera_replication.cnf
+  file { "${config_dir}/galera_replication.cnf":
+    ensure => absent,
   }
 
 }
