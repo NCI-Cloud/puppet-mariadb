@@ -1,0 +1,39 @@
+<% |
+    String $description,
+    Hash[String, Hash[String, Variant[String, Array[String]]] $sections,
+| -%>
+# Managed by Puppet - local changes will be overridden!
+#
+# Description: <%= $description %>
+
+<% $sections.each |String $section, Hash[String, Variant[String, Array[String]]] $values| { -%>
+[<%= $section %>]
+<%# Note: the '_comment' key sets a section header comment; a key starting     -%>
+<%# with '#' sets a comment in-line - hashes iterate in their insertion        -%>
+<%# order, so the comment will show up in the same place it is in the hash     -%>
+<%# definition. Only the key is used in an in-line comment, the value is       -%>
+<%# ignored.                                                                   -%>
+<%   if '_comment' in $values { -%>
+# <%= $values['_comment'] %>
+<%   } -%>
+<%   $values.each |String $key, Variant[String, Array[String]] $value| { -%>
+<%# skip the section comment while iterating -%>
+<%     if $key == '_comment' { next() } -%>
+<%     } elsif $key[0] == '#' { -%>
+<%# just the key, the value is ignored completely -%>
+<%= $key %>
+<%     } elsif $value =~ Boolean { -%>
+<%       if $value { -%>
+<%= $key %>=true
+<%       } else { -%>
+<%= $key %>=false
+<%       }
+<%     } elsif $value =~ Array[String] { -%>
+<%       $value.sort.each |String $one_value| { -%>
+<%= $key %>=<%= $one_value %>
+<%       } -%>
+<%     } else { -%> 
+<%= $key %>=<%= String($value) %>
+<%     }
+<%   } -%>
+<% } -%>
