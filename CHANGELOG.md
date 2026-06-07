@@ -7,6 +7,13 @@ and this project (tries to) adhere to
 
 ## [Unreleased]
 ### Changed
+
+### Fixed
+
+### Added
+
+## [1.4.0] - 2026-06-07
+### Changed
 - Default compression format for backups changed to zstd.
 - Generate galera config dynamically rather than with version-dependent
   templates.
@@ -14,6 +21,8 @@ and this project (tries to) adhere to
   apt and the puppetlabs/apt module.
 - Bumped puppetlabs/apt dependencies to >= 9.2.0 <12.0.0, to ensure
   apt::keyring is available.
+- Bumped supported releases of Debian, RedHat and Ubuntu.
+- Bumped minimum Puppet version to 6.x.
 
 ### Fixed
 - Replace use of `is_hash()` with type match, resolving issues with puppet7.
