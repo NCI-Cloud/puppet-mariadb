@@ -7,11 +7,17 @@ and this project (tries to) adhere to
 
 ## [Unreleased]
 ### Changed
-- Added type information to all classes.
 
 ### Fixed
 
 ### Added
+
+## [1.4.1] - 2026-06-07
+### Changed
+- Added type information to all classes.
+
+### Fixed
+- Various typos and minor errors in the dynamic config generation logic.
 
 ## [1.4.0] - 2026-06-07
 ### Changed
